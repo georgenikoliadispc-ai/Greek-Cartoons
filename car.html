@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cartoon Hub — Ελληνικά</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#071426; --panel:#0f1724; --card:#0f1724;
+    --muted:#9aa6c0; --accent:#3da0ff; --accent-2:#ff8a3d;
+    --glass: rgba(255,255,255,0.04); --radius:12px; --max-w:1200px;
+    --shadow: 0 10px 30px rgba(2,6,23,0.6);
+  }
+  body.light { --bg:#f6fbff; --panel:#ffffff; --card:#ffffff; --muted:#58606b; --shadow:0 8px 22px rgba(2,6,23,0.06) }
+
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;-webkit-font-smoothing:antialiased}
+  body{
+    background: radial-gradient(900px 500px at 10% 10%, rgba(61,160,255,0.06), transparent 10%), var(--bg);
+    color:#e6eef9; min-height:100vh; padding:20px 12px; transition:background .25s,color .25s;
+  }
+  .wrap{max-width:var(--max-w);margin:0 auto}
+
+  header{position:sticky;top:16px;z-index:60}
+  .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:10px;border-radius:14px;border:1px solid var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(6px)}
+  body.light .nav{background:rgba(255,255,255,0.95)}
+
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent-2),#ffbf7a);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2';font-weight:700;color:#fff}
+  .brand h1{margin:0;font-family:'Baloo 2';font-size:1.15rem;color:var(--accent-2)}
+  .brand .sub{font-size:.82rem;color:var(--muted)}
+
+  .controls{display:flex;gap:8px;align-items:center}
+  .search{display:flex;align-items:center;background:rgba(255,255,255,0.02);padding:6px;border-radius:10px}
+  body.light .search{background:rgba(2,6,23,0.02)}
+  .search input{border:0;background:transparent;color:inherit;padding:6px 8px;min-width:220px;outline:none}
+  .select{background:transparent;border:0;color:var(--muted);padding:6px 10px;border-radius:8px}
+
+  main{padding:8px 0}
+  .hero{text-align:center;padding:18px 0 6px}
+  .hero p{color:var(--muted);margin:8px auto;max-width:820px}
+
+  .grid{column-width:300px;column-gap:20px}
+  .card{display:inline-block;width:100%;margin:0 0 20px;vertical-align:top;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--glass);box-shadow:0 12px 30px rgba(2,6,23,0.45);transform:translateY(18px);opacity:0;transition:transform .45s cubic-bezier(.2,.9,.2,1),opacity .45s}
+  .card.show{transform:none;opacity:1}
+  .thumb{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(90deg,#061122,#0b1a2b)}
+  .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .card:hover img{transform:scale(1.06)}
+  .card-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .title{margin:0;font-weight:700;font-size:1rem;color:inherit}
+  .meta{color:var(--muted);font-size:.9rem}
+  .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .btn{display:inline-block;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#0b8cff);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 10px 28px rgba(6,120,255,0.08)}
+  .btn.secondary{background:transparent;border:1px solid rgba(6,120,255,0.12);color:var(--accent)}
+  .btn:focus{outline:3px solid rgba(6,120,255,0.12);outline-offset:3px}
+
+  .modal-back{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.64);z-index:120;padding:18px}
+  .modal{background:var(--panel);color:inherit;border-radius:12px;max-width:780px;width:100%;padding:18px;box-shadow:0 30px 80px rgba(2,6,23,0.6)}
+  .modal h3{margin:0 0 6px}
+  .modal p{color:var(--muted)}
+  .modal .links{margin-top:12px}
+
+  #topBtn{position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--accent),#0b8cff);color:#fff;border-radius:12px;padding:10px 12px;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(6,120,255,0.12);display:none;z-index:100}
+
+  :focus-visible{outline:3px solid rgba(6,120,255,0.12);outline-offset:3px;border-radius:6px}
+
+  @media (max-width:900px){ .grid{column-width:240px} .search input{min-width:140px} }
+  @media (max-width:520px){ .grid{column-width:160px} .brand h1{font-size:1rem} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="brand">
+          <div class="logo">CH</div>
+          <div>
+            <h1>Cartoon Hub</h1>
+            <div class="sub">Greek Dub — curated</div>
+          </div>
+        </div>
+
+        <div class="controls" role="search" aria-label="Search and filters">
+          <div class="search" title="Search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-4.35-4.35" stroke="#9fbfff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#9fbfff" stroke-width="1.6"/></svg>
+            <input id="q" type="search" placeholder="Αναζήτηση..." aria-label="Αναζήτηση" />
+          </div>
+
+          <select id="category" class="select" aria-label="Φίλτρο κατηγορίας">
+            <option value="all">Όλα</option>
+            <option value="series">Σειρές</option>
+            <option value="movies">Ταινίες</option>
+            <option value="kids">Παιδικά</option>
+            <option value="anime">Anime</option>
+          </select>
+
+          <button id="modeToggle" class="select" aria-label="Toggle theme">☀︎</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="siteTitle">
+        <h2 id="siteTitle" style="margin:8px 0 4px;font-family:'Baloo 2';">🎬 Cartoon Hub</h2>
+        <p>Polished, fast UI for your Greek-dubbed cartoon collection. Use search/categories and open details for each entry.</p>
+      </section>
+
+      <section id="grid" class="grid" aria-live="polite" aria-label="Shows grid">
+        <!-- Converted cards from your fragment -->
+        <article class="card" data-title="Teenage Mutant Ninja Turtles (2012)" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="tmnt 2012.webp" alt="TMNT 2012 Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Teenage Mutant Ninja Turtles (2012)</div><div class="meta">Σειρά · Ελληνικά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1vIvtx_z6SiQpJ4HTO2Lt8xdOHXrRxa1b?usp=drive_link" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Danny Phantom" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="danny phantom.webp" alt="Danny Phantom Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Danny Phantom</div><div class="meta">Σειρά · Ελληνικά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1Ho_KL_DJtRUeazCAq8pgvpIOpn_tNIHq?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Baby Looney Tunes" data-cat="kids" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="baby looney tunes.webp" alt="Baby Looney Tunes Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Baby Looney Tunes</div><div class="meta">Σειρά · Παιδικό</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1lpZUFpWuCOQkd1QSUMHEorOYw39N-cQN?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="The Looney Tunes Show" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="the looney tunes show.webp" alt="Looney Tunes Show Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">The Looney Tunes Show</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1rWyY_2d52rPOQFGkZODtxuxMEkBs7Rcp?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Duck Dodgers" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="duck dodgers.webp" alt="Duck Dodgers Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Duck Dodgers</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1M4IOh_lE0u6-ohWMEyNUrvjhj11f6Pun?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="All Hail King Julien" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="all hail king julien.webp" alt="King Julien Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">All Hail King Julien</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1BCcPfvQZV_EtIaDqtbVTtBrXGZ_0PLp3?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Max Steel" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="max steel.webp" alt="Max Steel Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Max Steel</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1dLW0KvXed65_f9h6o9CjLIbJ4ioPtCH-?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Teen Days" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="teen days.webp" alt="Teen Days Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Teen Days</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1CMKrG2gdsOd0HXACC6Q2fhNWWYkXQyr5?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Ο Μαστοράκος" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="ο μαστορακος.webp" alt="Ο Μαστοράκος Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Ο Μαστοράκος</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1KEs1FaxvHo4M4nff3zArit3vL_DrikZg?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Penguins of Madagascar" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="penguins of madagascar.webp" alt="Penguins of Madagascar Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Penguins of Madagascar</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1L_Th9zmQoneb0InF7ZgpernKFjb0gKXA" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Slugterra" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="slugtera.webp" alt="Slugterra Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Slugterra</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1hCHYo_s3_zfsxL9Zl96_AcYITB18b4hK" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Cars Trilogy" data-cat="movies" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="cars trilogy.webp" alt="Cars Trilogy Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Cars Trilogy</div><div class="meta">Ταινίες</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1pikOHfDUPcmxydiRWmzqm-MBoEkbitZ2?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Xiaolin Showdown" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="Xiaolin_Showdown.png" alt="Xiaolin Showdown Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Xiaolin Showdown</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1AabCsTadI9w9Oo8aMMg0vokzNn2hEU_O?usp=drive_link" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Pokémon (Όλες οι σεζόν)" data-cat="anime" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="pokemon.webp" alt="Pokemon Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Pokémon (Όλες οι σεζόν)</div><div class="meta">Συλλογή · MEGA</div></div><div class="links"><a class="btn" href="https://mega.nz/folder/xNQ3CbwJ#AlJWfUe_gzVgxmRVQWvepg" target="_blank" rel="noopener">MEGA</a><a class="btn" href="https://mega.nz/folder/2S5DVSBC#ny4MW3-tPgOrvEgSvH9WDA" target="_blank" rel="noopener">S25 - Link 1</a></div></div>
+        </article>
+
+        <article class="card" data-title="Spectacular Spider-Man" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="spectacular spider man.webp" alt="Spectacular Spider-Man Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Spectacular Spider-Man</div><div class="meta">Σεζόν · MEGA</div></div><div class="links"><a class="btn" href="https://mega.nz/folder/OchGhQTA#1VxMFuDYmPFsMOwyHKMNKQ" target="_blank" rel="noopener">Σεζόν 1</a><a class="btn" href="https://mega.nz/folder/to92nLLD#ocwwRjN66sgsBxsu0t6SvA" target="_blank" rel="noopener">Σεζόν 2</a></div></div>
+        </article>
+
+        <article class="card" data-title="Spider-Man Animated Series" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="spiderman animated series.webp" alt="Spider-Man Animated Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Spider-Man Animated Series</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1BjO8X2eezLyojrImTVtRDpjoWibRjYpn" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Teenage Mutant Ninja Turtles (1987)" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="tmnt 1987.webp" alt="TMNT 1987 Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Teenage Mutant Ninja Turtles (1987)</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1zArAjfOI_Nd0vnu0TOkjTlaV_UdS-Qfy" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Yu-Gi-Oh!" data-cat="anime" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="yu-gi-oh.webp" alt="Yu-Gi-Oh Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Yu-Gi-Oh!</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1a_4kCgZYb-3ymeFH7HxrceRHPf7bIgo8" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Batman - The Brave and the Bold" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="batman brave and the bold.webp" alt="Batman Brave and the Bold Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Batman - The Brave and the Bold</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1lkOiORnqb7GdmeCbPnNmrrun7DpcHc3x" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Batman - SubZero (1998)" data-cat="movies" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="batman mr freeze.webp" alt="Batman SubZero Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Batman - Υπό το Μηδέν (SubZero, 1998)</div><div class="meta">Ταινία</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1i2GfEAtpDTvFhNFpFdrRerSIup0R5t_s" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Batman - Mask of the Phantasm (1993)" data-cat="movies" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="Batman_mask_of_the_phantasm_poster.webp" alt="Batman Mask of the Phantasm Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Batman - Η Μάσκα του Φαντάσματος (1993)</div><div class="meta">Ταινία</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1J2r6M13dPyzDTrNRypKrZwqNrIXJRN7_" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Sylvester and Tweety" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="sylvester and twetety.webp" alt="Sylvester and Tweety Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Sylvester and Tweety</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/12e4Z91ES0a_svHsyegyawZNwvAB83xdF?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+        <article class="card" data-title="Avatar The Last Airbender" data-cat="series" tabindex="0">
+          <div class="thumb"><img loading="lazy" src="atla.webp" alt="Avatar The Last Airbender Greek" onerror="this.onerror=null;this.src=placeholder(640,360)"></div>
+          <div class="card-body"><div><div class="title">Avatar The Last Airbender</div><div class="meta">Σειρά</div></div><div class="links"><a class="btn" href="https://drive.google.com/drive/folders/1r5s5lmUAE56v2orjp8hOqfzKxJtVtN9-?usp=sharing" target="_blank" rel="noopener">Δείτε</a></div></div>
+        </article>
+
+      </section>
+
+      <div id="empty" style="display:none;text-align:center;color:var(--muted);padding:20px">Δεν βρέθηκε κανένα αποτέλεσμα</div>
+    </main>
+  </div>
+
+  <div id="modalBack" class="modal-back" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <button id="modalClose" aria-label="Κλείσιμο" style="float:right;background:transparent;border:0;font-size:18px;cursor:pointer;color:inherit">✕</button>
+      <h3 id="modalTitle"></h3>
+      <div id="modalMeta" style="color:var(--muted);margin-bottom:8px"></div>
+      <p id="modalDesc" style="color:var(--muted)"></p>
+      <div id="modalLinks" class="links"></div>
+    </div>
+  </div>
+
+  <button id="topBtn" title="Back to top">▲</button>
+
+<script>
+  function placeholder(w=640,h=360,text='No image'){ const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'><rect width='100%' height='100%' fill='%23e6f0ff'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-family='Arial' font-size='20'>${text}</text></svg>`; return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg); }
+
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const io = new IntersectionObserver(entries => { entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('show'); io.unobserve(en.target); }}); }, {threshold:0.12});
+  cards.forEach(c=> io.observe(c));
+
+  const q = document.getElementById('q'), cat = document.getElementById('category'), emptyEl = document.getElementById('empty');
+  function filterCards(){ const term=q.value.trim().toLowerCase(); const category=cat.value; let visible=0; cards.forEach(card=>{ const title=(card.dataset.title||'').toLowerCase(); const c=(card.dataset.cat||'series'); const matchesTerm=!term||title.includes(term); const matchesCat=category==='all'||c===category; card.style.display=(matchesTerm&&matchesCat)?'':'none'; if(matchesTerm&&matchesCat) visible++; }); emptyEl.style.display = visible? 'none' : 'block'; }
+  q.addEventListener('input', filterCards); cat.addEventListener('change', filterCards); window.addEventListener('load', filterCards);
+
+  window.addEventListener('keydown', e=> { if(e.key==='/' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){ e.preventDefault(); q.focus(); } });
+
+  const modalBack = document.getElementById('modalBack'), modalTitle = document.getElementById('modalTitle'), modalDesc = document.getElementById('modalDesc'), modalLinks = document.getElementById('modalLinks'), modalMeta = document.getElementById('modalMeta'), modalClose = document.getElementById('modalClose');
+  // If you want "Περισσότερα" buttons, add them with class="js-more" and data-desc/data-links JSON; handler below:
+  document.querySelectorAll('.js-more').forEach(btn=> btn.addEventListener('click', ()=>{ const card=btn.closest('.card'); modalTitle.textContent=card.dataset.title||'Πληροφορίες'; modalMeta.textContent=(card.dataset.cat||'').toUpperCase(); modalDesc.textContent=btn.dataset.desc||''; modalLinks.innerHTML=''; try{ const links=JSON.parse(btn.dataset.links||'[]'); links.forEach(l=>{ const a=document.createElement('a'); a.href=l.url; a.target='_blank'; a.rel='noopener'; a.className='btn'; a.textContent=l.label||'Άνοιγμα'; modalLinks.appendChild(a); }); }catch(e){} modalBack.style.display='flex'; modalBack.setAttribute('aria-hidden','false'); modalClose.focus(); }));
+  function closeModal(){ modalBack.style.display='none'; modalBack.setAttribute('aria-hidden','true'); }
+  modalClose.addEventListener('click', closeModal); modalBack.addEventListener('click', e=>{ if(e.target===modalBack) closeModal(); }); window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+  const topBtn=document.getElementById('topBtn'); window.addEventListener('scroll', ()=> topBtn.style.display = window.scrollY>400? 'block' : 'none'); topBtn.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+
+  const modeToggle=document.getElementById('modeToggle'); const body=document.body; const saved=localStorage.getItem('ch-theme')||'dark'; if(saved==='light'){ body.classList.add('light'); modeToggle.textContent='☾'; } else modeToggle.textContent='☀︎';
+  modeToggle.addEventListener('click', ()=>{ if(body.classList.toggle('light')){ localStorage.setItem('ch-theme','light'); modeToggle.textContent='☾'; } else { localStorage.setItem('ch-theme','dark'); modeToggle.textContent='☀︎'; } });
+
+  document.addEventListener('keydown', e=>{ if(e.key==='Enter' && document.activeElement && document.activeElement.classList.contains('js-more')) document.activeElement.click(); });
+
+  window.refreshGrid = ()=> { document.querySelectorAll('.card').forEach(c=>{ if(!c.classList.contains('show')) io.observe(c); }); };
+</script>
+</body>
+</html>
